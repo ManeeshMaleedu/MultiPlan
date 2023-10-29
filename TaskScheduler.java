@@ -12,6 +12,10 @@ import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 
 
@@ -51,7 +55,13 @@ public class TaskScheduler {
                 case 5:
                     setHoursForTask();
                     break;
-                case 6:
+                 case 6:
+                    modifyTask();
+                    break;
+                case 7:
+                    deleteTask();
+                    break;
+                case 8:
                     keepRunning = false;  // Exit the loop
                     break;
         default:
@@ -73,10 +83,44 @@ public class TaskScheduler {
             System.out.println("3. View tasks to be completed");
             System.out.println("4. View completed tasks");
             System.out.println("5. Set hours for task");
-            System.out.println("6. Quit");
+            System.out.println("6. Modify a task");
+            System.out.println("7. Delete task");
+            System.out.println("8. Quit");
     }
+    private static void deleteTask() {
+    System.out.print("Enter task name to delete: ");
+    String name = scanner.nextLine();
+    taskManager.deleteTaskByName(name);
+    System.out.println("Task deleted.");
+}
 
-            
+
+
+
+      private static void modifyTask() {
+    System.out.print("Enter name of the task to modify: ");
+    String oldName = scanner.nextLine();
+
+    Task task = taskManager.getTaskByName(oldName);
+    if (task != null) {
+        System.out.print("Enter new task name (or press Enter to skip): ");
+        String newName = scanner.nextLine();
+        if (!newName.isEmpty()) {
+            task.setName(newName);
+        }
+
+        System.out.print("Enter new due date (YYYY-MM-DD or press Enter to skip): ");
+        String newDueDate = scanner.nextLine();
+        if (!newDueDate.isEmpty()) {
+            task.setDueDate(newDueDate);
+        }
+
+        System.out.println("Task modified.");
+    } else {
+        System.out.println("Task not found.");
+    }
+}
+      
      private static void checkForReminders() {
         LocalDate today = LocalDate.now();
         for (Task task : taskManager.getTasks()) {
@@ -90,16 +134,26 @@ public class TaskScheduler {
     }
 
     private static void addTask() {
-        System.out.print("Enter task name: ");
-        String name = scanner.nextLine();
+    System.out.print("Enter task name: ");
+    String name = scanner.nextLine();
 
+    String dueDate;
+    while (true) {
         System.out.print("Enter due date (YYYY-MM-DD): ");
-        String dueDate = scanner.nextLine();
-
-        Task task = new Task(name, dueDate);
-        taskManager.addTask(task);
-        System.out.println("Task added.");
+        dueDate = scanner.nextLine();
+        
+        if (LocalDate.parse(dueDate).isBefore(LocalDate.now())) {
+            System.out.println("Due date can't be in the past. Please enter a valid date.");
+            continue;
+        }
+        break;
     }
+
+    Task task = new Task(name, dueDate);
+    taskManager.addTask(task);
+    System.out.println("Task added.");
+}
+
 
     private static void markTaskAsCompleted() {
         System.out.print("Enter task name to mark as completed: ");
@@ -150,7 +204,6 @@ private static void setHoursForTask() {
         }
     }
 }
-
 }
 
 

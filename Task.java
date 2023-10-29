@@ -7,17 +7,15 @@ package multiplan_;
 import java.io.Serializable;
 import java.time.LocalTime;
 
-/**
- *
- * @author malee
- */
-class Task implements Serializable{
+class Task implements Serializable {
+    private static final long serialVersionUID = 669243730580405923L;
+    
     private String name;
     private String dueDate;
     private boolean completed;
     private int hoursAllocated;
     private LocalTime startTime;
-    
+
     public Task(String name, String dueDate) {
         this.name = name;
         this.dueDate = dueDate;
@@ -29,8 +27,16 @@ class Task implements Serializable{
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDueDate() {
         return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
     }
 
     public boolean isCompleted() {
@@ -48,6 +54,7 @@ class Task implements Serializable{
     public void setHoursAllocated(int hours) {
         this.hoursAllocated = hours;
     }
+
     public LocalTime getStartTime() {
         return startTime;
     }

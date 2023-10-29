@@ -126,6 +126,26 @@ class TaskManager {
                 System.out.println("Error loading tasks: " + e.getMessage());
             }
         }
+     }
+       
+
+    public void deleteTaskByName(String name) {
+    Task taskToRemove = null;
+    for (Task task : tasks) {
+        if (task.getName().equalsIgnoreCase(name)) {
+            taskToRemove = task;
+            break;
+        }
+    }
+    
+    if(taskToRemove != null) {
+        tasks.remove(taskToRemove);
+        System.out.println("Task '" + name + "' has been removed.");
+    } else {
+        System.out.println("Task '" + name + "' not found.");
+    }
+}
+
     }
 
-}
+
